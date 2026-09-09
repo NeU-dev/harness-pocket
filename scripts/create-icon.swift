@@ -16,7 +16,7 @@ func render(size: Int, to relativePath: String) throws {
     context.scaleBy(x: CGFloat(size) / 1024, y: -CGFloat(size) / 1024)
     let gradient = CGGradient(colorsSpace: colorSpace,
         colors: [color(94, 73, 190), color(47, 36, 102)] as CFArray, locations: [0, 1])!
-    context.drawLinearGradient(gradient, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 850, y: 1024), options: [])
+    context.drawLinearGradient(gradient, start: CGPoint(x: 0, y: 0), end: CGPoint(x: 850, y: 1024), options: [.drawsBeforeStartLocation, .drawsAfterEndLocation])
     context.setFillColor(color(246, 244, 255))
     context.addPath(CGPath(roundedRect: CGRect(x: 186, y: 225, width: 652, height: 504), cornerWidth: 142, cornerHeight: 142, transform: nil)); context.fillPath()
     let tail = CGMutablePath(); tail.move(to: CGPoint(x: 278, y: 662)); tail.addLine(to: CGPoint(x: 278, y: 810)); tail.addQuadCurve(to: CGPoint(x: 472, y: 707), control: CGPoint(x: 371, y: 792)); tail.closeSubpath()
