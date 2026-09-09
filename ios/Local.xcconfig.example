@@ -1,0 +1,3 @@
+// Replace both values for a physical device. Never commit Local.xcconfig.
+POCKET_BUNDLE_ID = com.yourname.HarnessPocket
+DEVELOPMENT_TEAM = YOURTEAMID

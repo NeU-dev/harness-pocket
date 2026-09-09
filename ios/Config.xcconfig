@@ -1,0 +1,5 @@
+// Public defaults for Simulator builds. Copy Local.xcconfig.example to
+// Local.xcconfig to set your own signing team and unique bundle identifier.
+POCKET_BUNDLE_ID = com.example.HarnessPocket
+DEVELOPMENT_TEAM =
+#include? "Local.xcconfig"

@@ -1,0 +1,406 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		0B85A566AA5DFD69DA3FD2E8 /* PairingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DE3AC7CD563F5A3FD1F234B /* PairingView.swift */; };
+		0EEDD8E68683B60A0ED94F9D /* PushNotifications.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0257010F92C603D274EA3267 /* PushNotifications.swift */; };
+		1551C6E66E4C323CF736C4E2 /* ChatView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1D39CD7434CE01D2931CD171 /* ChatView.swift */; };
+		1D050F997AF4BAD7F0DD8EBF /* AppModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 08B832305F28A0B6807A2373 /* AppModel.swift */; };
+		2905E84CF99CEB036A95E3DD /* ApprovalCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8D0D70FB46734AAFA7408E80 /* ApprovalCard.swift */; };
+		5FC590FDAFCF855A1234FFF2 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49D4BD9F14E91A07B4E3FC40 /* Models.swift */; };
+		7D13B35BBCFD2FC42338AA1B /* API.swift in Sources */ = {isa = PBXBuildFile; fileRef = CB96EB1420B66953D774CF19 /* API.swift */; };
+		8633B04DB34E7CC521C73F6D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 53D5C103C4B38E01799E4857 /* Assets.xcassets */; };
+		A929F222F9116F2F5EB8E425 /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 307FA15729B4F0B92FD11361 /* SettingsView.swift */; };
+		B0A9429F27702365279440C1 /* PermissionSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0022344650B306CB5EAAE5B0 /* PermissionSettingsView.swift */; };
+		B3BD70F2C2AF05BA536CF9B1 /* DirectoryPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F8D66B1F95C1D8A843EC56B2 /* DirectoryPickerView.swift */; };
+		D1C01B7D338BFE384FD36388 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DE64A3EAA599824ABF68DE80 /* Foundation.framework */; };
+		D263C159450C4A5E4A4B5BE6 /* HarnessPocketApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 376AC04A00587FBD8F8EEF37 /* HarnessPocketApp.swift */; };
+		D2771F6ECA3CEBD4379A3ED0 /* PerformanceFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30899024A6C7300F648D650 /* PerformanceFixture.swift */; };
+		D8FBD148AA3167363CFA5DC8 /* Attachments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976D05BA65ABB216AF24E96 /* Attachments.swift */; };
+		E81A177879B3C59BD086B9D7 /* ConnectionSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FD47A50A259CAE9A3F8CA3 /* ConnectionSettingsView.swift */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		0022344650B306CB5EAAE5B0 /* PermissionSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PermissionSettingsView.swift; sourceTree = "<group>"; };
+		0257010F92C603D274EA3267 /* PushNotifications.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PushNotifications.swift; sourceTree = "<group>"; };
+		08B832305F28A0B6807A2373 /* AppModel.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = AppModel.swift; sourceTree = "<group>"; };
+		1D39CD7434CE01D2931CD171 /* ChatView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ChatView.swift; sourceTree = "<group>"; };
+		28FD47A50A259CAE9A3F8CA3 /* ConnectionSettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ConnectionSettingsView.swift; sourceTree = "<group>"; };
+		2976D05BA65ABB216AF24E96 /* Attachments.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Attachments.swift; sourceTree = "<group>"; };
+		307FA15729B4F0B92FD11361 /* SettingsView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
+		376AC04A00587FBD8F8EEF37 /* HarnessPocketApp.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = HarnessPocketApp.swift; sourceTree = "<group>"; };
+		45A13C30A2AAF5728307F562 /* Config.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Config.xcconfig; sourceTree = "<group>"; };
+		49D4BD9F14E91A07B4E3FC40 /* Models.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		4DE3AC7CD563F5A3FD1F234B /* PairingView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PairingView.swift; sourceTree = "<group>"; };
+		53D5C103C4B38E01799E4857 /* Assets.xcassets */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		68ECCB4B9F049CD699B6EC09 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		8A7E2329E3A0E49F1AC214E2 /* HarnessPocket.entitlements */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.entitlements; path = HarnessPocket.entitlements; sourceTree = "<group>"; };
+		8D0D70FB46734AAFA7408E80 /* ApprovalCard.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = ApprovalCard.swift; sourceTree = "<group>"; };
+		CB96EB1420B66953D774CF19 /* API.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = API.swift; sourceTree = "<group>"; };
+		D30899024A6C7300F648D650 /* PerformanceFixture.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = PerformanceFixture.swift; sourceTree = "<group>"; };
+		D43AD6822225634C6734BBB8 /* HarnessPocket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HarnessPocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		DE64A3EAA599824ABF68DE80 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
+		F8D66B1F95C1D8A843EC56B2 /* DirectoryPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DirectoryPickerView.swift; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9FCE55059657925A238E6529 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				D1C01B7D338BFE384FD36388 /* Foundation.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		2A8494BBDA5422991D6C4F5F /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				D43AD6822225634C6734BBB8 /* HarnessPocket.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		3259DFFF046B5028464DE606 = {
+			isa = PBXGroup;
+			children = (
+				2A8494BBDA5422991D6C4F5F /* Products */,
+				9525F19300253B9F5F9A25C0 /* Frameworks */,
+				F53E603BA31A302843919FDD /* HarnessPocket */,
+				45A13C30A2AAF5728307F562 /* Config.xcconfig */,
+			);
+			sourceTree = "<group>";
+		};
+		5D0BFC877ECE933EA66A3831 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				DE64A3EAA599824ABF68DE80 /* Foundation.framework */,
+			);
+			name = iOS;
+			sourceTree = "<group>";
+		};
+		9525F19300253B9F5F9A25C0 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				5D0BFC877ECE933EA66A3831 /* iOS */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		F53E603BA31A302843919FDD /* HarnessPocket */ = {
+			isa = PBXGroup;
+			children = (
+				CB96EB1420B66953D774CF19 /* API.swift */,
+				08B832305F28A0B6807A2373 /* AppModel.swift */,
+				8D0D70FB46734AAFA7408E80 /* ApprovalCard.swift */,
+				2976D05BA65ABB216AF24E96 /* Attachments.swift */,
+				1D39CD7434CE01D2931CD171 /* ChatView.swift */,
+				28FD47A50A259CAE9A3F8CA3 /* ConnectionSettingsView.swift */,
+				F8D66B1F95C1D8A843EC56B2 /* DirectoryPickerView.swift */,
+				376AC04A00587FBD8F8EEF37 /* HarnessPocketApp.swift */,
+				49D4BD9F14E91A07B4E3FC40 /* Models.swift */,
+				4DE3AC7CD563F5A3FD1F234B /* PairingView.swift */,
+				D30899024A6C7300F648D650 /* PerformanceFixture.swift */,
+				0022344650B306CB5EAAE5B0 /* PermissionSettingsView.swift */,
+				0257010F92C603D274EA3267 /* PushNotifications.swift */,
+				307FA15729B4F0B92FD11361 /* SettingsView.swift */,
+				68ECCB4B9F049CD699B6EC09 /* Info.plist */,
+				8A7E2329E3A0E49F1AC214E2 /* HarnessPocket.entitlements */,
+				53D5C103C4B38E01799E4857 /* Assets.xcassets */,
+			);
+			name = HarnessPocket;
+			path = HarnessPocket;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		A7BAA849FAE082C600B1185D /* HarnessPocket */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 864A3B3928EECD5E05326B3B /* Build configuration list for PBXNativeTarget "HarnessPocket" */;
+			buildPhases = (
+				F569B97DD6F9364D944D98E2 /* Sources */,
+				9FCE55059657925A238E6529 /* Frameworks */,
+				58FB9F4A1E3079094AB3DCF5 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = HarnessPocket;
+			productName = HarnessPocket;
+			productReference = D43AD6822225634C6734BBB8 /* HarnessPocket.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		948DD3B851DF9CD755E99C0A /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 1600;
+				LastUpgradeCheck = 1600;
+				TargetAttributes = {
+					A7BAA849FAE082C600B1185D = {
+						SystemCapabilities = {
+							com.apple.Push = {
+								enabled = 1;
+							};
+						};
+					};
+				};
+			};
+			buildConfigurationList = 0586E585DCC3E3708CFCB48C /* Build configuration list for PBXProject "HarnessPocket" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 3259DFFF046B5028464DE606;
+			minimizedProjectReferenceProxies = 0;
+			preferredProjectObjectVersion = 77;
+			productRefGroup = 2A8494BBDA5422991D6C4F5F /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				A7BAA849FAE082C600B1185D /* HarnessPocket */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		58FB9F4A1E3079094AB3DCF5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				8633B04DB34E7CC521C73F6D /* Assets.xcassets in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		F569B97DD6F9364D944D98E2 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				7D13B35BBCFD2FC42338AA1B /* API.swift in Sources */,
+				1D050F997AF4BAD7F0DD8EBF /* AppModel.swift in Sources */,
+				2905E84CF99CEB036A95E3DD /* ApprovalCard.swift in Sources */,
+				D8FBD148AA3167363CFA5DC8 /* Attachments.swift in Sources */,
+				1551C6E66E4C323CF736C4E2 /* ChatView.swift in Sources */,
+				E81A177879B3C59BD086B9D7 /* ConnectionSettingsView.swift in Sources */,
+				B3BD70F2C2AF05BA536CF9B1 /* DirectoryPickerView.swift in Sources */,
+				D263C159450C4A5E4A4B5BE6 /* HarnessPocketApp.swift in Sources */,
+				5FC590FDAFCF855A1234FFF2 /* Models.swift in Sources */,
+				0B85A566AA5DFD69DA3FD2E8 /* PairingView.swift in Sources */,
+				D2771F6ECA3CEBD4379A3ED0 /* PerformanceFixture.swift in Sources */,
+				B0A9429F27702365279440C1 /* PermissionSettingsView.swift in Sources */,
+				0EEDD8E68683B60A0ED94F9D /* PushNotifications.swift in Sources */,
+				A929F222F9116F2F5EB8E425 /* SettingsView.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin XCBuildConfiguration section */
+		5809D856FFC7F9AE7D02D141 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				MTL_FAST_MATH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_COMPILATION_MODE = wholemodule;
+				SWIFT_OPTIMIZATION_LEVEL = "-O";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Release;
+		};
+		AA532935F94D984FC46A9DB2 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 45A13C30A2AAF5728307F562 /* Config.xcconfig */;
+			buildSettings = {
+				APNS_ENTITLEMENT = development;
+				APNS_ENVIRONMENT = sandbox;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HarnessPocket/HarnessPocket.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 7;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				INFOPLIST_FILE = HarnessPocket/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(POCKET_BUNDLE_ID)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+			};
+			name = Debug;
+		};
+		DA3550C16FB599F494B14D42 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_ENABLE_OBJC_WEAK = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
+				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+			};
+			name = Debug;
+		};
+		FAFFAA0E06C8B5078B02262C /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 45A13C30A2AAF5728307F562 /* Config.xcconfig */;
+			buildSettings = {
+				APNS_ENTITLEMENT = production;
+				APNS_ENVIRONMENT = production;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CLANG_ENABLE_OBJC_WEAK = NO;
+				CODE_SIGN_ENTITLEMENTS = HarnessPocket/HarnessPocket.entitlements;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 7;
+				ENABLE_USER_SCRIPT_SANDBOXING = YES;
+				INFOPLIST_FILE = HarnessPocket/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 0.1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = "$(POCKET_BUNDLE_ID)";
+				SDKROOT = iphoneos;
+				SWIFT_EMIT_LOC_STRINGS = YES;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = 1;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		0586E585DCC3E3708CFCB48C /* Build configuration list for PBXProject "HarnessPocket" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				DA3550C16FB599F494B14D42 /* Debug */,
+				5809D856FFC7F9AE7D02D141 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		864A3B3928EECD5E05326B3B /* Build configuration list for PBXNativeTarget "HarnessPocket" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				FAFFAA0E06C8B5078B02262C /* Release */,
+				AA532935F94D984FC46A9DB2 /* Debug */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 948DD3B851DF9CD755E99C0A /* Project object */;
+}

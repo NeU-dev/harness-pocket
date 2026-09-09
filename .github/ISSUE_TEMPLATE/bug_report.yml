@@ -1,0 +1,22 @@
+name: Bug report
+description: Something is not working as expected
+body:
+  - type: textarea
+    id: behavior
+    attributes:
+      label: What happened?
+      description: Include reproduction steps and expected behavior. Remove private conversation content.
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: iPhone model, iOS version, app commit, DSH version, host OS and Node.js version.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs or screenshots
+      description: Do not include startup URLs with tokens, APNs keys, device tokens, or your .env file.
