@@ -19,8 +19,8 @@ function directory(t) {
   const dir = fs.mkdtempSync(path.join(os.tmpdir(), 'pocket-connection-'));
   t.after(() => fs.rmSync(dir, { recursive: true, force: true })); return dir;
 }
-async function upstream(t, secret) {
-  let logins = 0; const eventStreams = [];
+async function upstream(t, secret, { missingSessions = [] } = {}) {
+  let logins = 0, connections = 0; const eventStreams = [];
   const server = http.createServer(async (req, res) => {
     if (req.method === 'GET') {
       if (new URL(req.url, 'http://localhost').searchParams.get('token') !== secret) { res.writeHead(401); res.end(); return; }
@@ -33,6 +33,7 @@ async function upstream(t, secret) {
   });
   const wss = new WebSocketServer({ server, path: '/api/remote.mux' });
   wss.on('connection', (ws, req) => {
+    connections++;
     assert.equal(req.headers.cookie, `dsh=${secret}`);
     ws.on('message', bytes => {
       const msg = JSON.parse(bytes);
@@ -40,12 +41,16 @@ async function upstream(t, secret) {
       if (msg.endpoint === '$events') { eventStreams.push(send); send({ type: 'ready', clientId: 'client', host: { home: '/home/test' } }); }
       if (msg.endpoint === 'workspace/follow') send({ type: 'baseline', value: { items: [], archivedSessionIds: [] } });
       if (msg.endpoint === 'session/control') send({ type: 'baseline', value: { queues: {} } });
-      if (msg.endpoint === 'session/follow') send({ type: 'snapshot', cursor: 10, records: [], header: { cwd: '/home/test' }, projections: { values: {} } });
+      if (msg.endpoint === 'session/follow') {
+        const sessionId = msg.payload.args.request.address.sessionId;
+        if (missingSessions.includes(sessionId)) ws.send(JSON.stringify({ type: 'error', streamId: msg.streamId, error: { message: `session "${sessionId}" not found` } }));
+        else send({ type: 'snapshot', cursor: 10, records: [], header: { cwd: '/home/test' }, projections: { values: {} } });
+      }
     });
   });
   server.listen(0, '127.0.0.1'); await once(server, 'listening');
   t.after(async () => { for (const ws of wss.clients) ws.terminate(); server.closeAllConnections(); await new Promise(r => server.close(r)); });
-  return { url: `http://127.0.0.1:${server.address().port}`, emit: value => eventStreams.at(-1)(value), disconnect: () => { for (const ws of wss.clients) ws.terminate(); }, get logins() { return logins; } };
+  return { url: `http://127.0.0.1:${server.address().port}`, emit: value => eventStreams.at(-1)(value), disconnect: () => { for (const ws of wss.clients) ws.terminate(); }, get logins() { return logins; }, get connections() { return connections; } };
 }
 
 test('runtime connection accepts only private owned loopback records with a living process', t => {
@@ -91,6 +96,23 @@ test('new DSH port and token reconnect automatically, restoring watches and ques
   assert.ok(changes.some(v => v.sessionId === 'session-a'));
   assert.equal(Object.values(store.state.outbox)[1].status, 'cancelled');
   harness.stop();
+});
+
+test('a deleted watched session is forgotten without reconnecting the DSH socket', async t => {
+  const dir = directory(t), store = new Store(dir);
+  const pair = store.pair(store.pairCode().code, 'iPhone'), device = store.authenticate(pair.token);
+  store.subscribe(device, 'session-missing', 10);
+  store.subscribe(device, 'session-live', 10);
+  const server = await upstream(t, token, { missingSessions: ['session-missing'] });
+  const harness = new Harness({ url: server.url, token, store });
+  t.after(() => harness.stop()); harness.start();
+  await until(() => harness.ready && harness.sessions.get('session-live')?.loaded && !store.state.watches['session-missing']);
+  await new Promise(r => setTimeout(r, 600));
+  assert.equal(harness.ready, true);
+  assert.equal(harness.lastError, null);
+  assert.equal(server.connections, 1);
+  assert.equal(device.subscriptions['session-missing'], undefined);
+  assert.ok(store.state.watches['session-live']);
 });
 
 test('manual repair validates authentication before persisting and restarting', async t => {

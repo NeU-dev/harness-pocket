@@ -50,6 +50,18 @@ export class Store {
     this.state.watches[sessionId] ??= { cursor, lastSeenAt: Date.now() };
     this.save();
   }
+  forgetSession(sessionId) {
+    let changed = delete this.state.watches[sessionId];
+    for (const device of Object.values(this.state.devices)) {
+      if (delete device.subscriptions[sessionId]) changed = true;
+    }
+    for (const item of Object.values(this.state.outbox)) {
+      if (item.sessionId === sessionId && ['pending', 'waiting-connection'].includes(item.status)) {
+        item.status = 'cancelled'; changed = true;
+      }
+    }
+    if (changed) this.save();
+  }
   questionAsked(sessionId, eventId) {
     if (!sessionId || !eventId) return;
     for (const device of Object.values(this.state.devices)) {

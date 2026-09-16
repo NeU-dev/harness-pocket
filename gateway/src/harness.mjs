@@ -142,7 +142,13 @@ export class Harness extends EventEmitter {
         if (!stream) return;
         if (message.type === 'item') {
           stream.queue = stream.queue.then(() => stream.onValue(message.value)).catch(error => { this.lastError = error.message; ws.terminate(); });
-        } else { this.lastError = message.error?.message || 'Harness stream ended'; ws.terminate(); }
+        } else {
+          const error = message.error?.message || 'Harness stream ended';
+          this.streams.delete(message.streamId);
+          let handled = false;
+          try { handled = stream.onEnd?.(error, message.error) === true; } catch {}
+          if (!handled) { this.lastError = error; ws.terminate(); }
+        }
       });
       ws.on('error', () => { this.lastError ||= 'DGXのHarnessに接続できません'; });
       ws.on('unexpected-response', (_request, response) => {
@@ -160,8 +166,8 @@ export class Harness extends EventEmitter {
     this.store.questionConnectionLost?.();
     if (!this.closed) this.retryTimer = setTimeout(() => void this.connect(), Math.min(10_000, 500 * 2 ** this.retry++));
   }
-  openStream(endpoint, args, onValue) {
-    const streamId = randomUUID(); this.streams.set(streamId, { onValue, queue: Promise.resolve() });
+  openStream(endpoint, args, onValue, onEnd) {
+    const streamId = randomUUID(); this.streams.set(streamId, { onValue, onEnd, queue: Promise.resolve() });
     this.socket.send(JSON.stringify({ type: 'open', streamId, endpoint, payload: { args } }));
     return streamId;
   }
@@ -217,6 +223,13 @@ export class Harness extends EventEmitter {
         s.live = applyLiveFrame(s.live, value.frame);
       }
       this.emit('changed', { type: 'session', sessionId });
+    }, error => {
+      s.streamId = null;
+      if (!/^session\s+["'].*["']\s+not found$/i.test(error)) return false;
+      this.sessions.delete(sessionId);
+      this.store.forgetSession(sessionId);
+      this.emit('changed', { type: 'sessions', sessionId });
+      return true;
     });
   }
   async watch(sessionId) {
