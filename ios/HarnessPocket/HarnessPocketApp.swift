@@ -15,7 +15,7 @@ import SwiftUI
                 .onChange(of: scenePhase) { _, phase in if phase == .active { model.resume() } else if phase == .background { model.pause() } }
                 .onReceive(NotificationCenter.default.publisher(for: .pocketPushToken)) { note in if let token = note.object as? String { Task { await model.receivedToken(token) } } }
                 .onReceive(NotificationCenter.default.publisher(for: .pocketOpenConversation)) { note in if let id = note.object as? String { Task { await model.open(id) } } }
-                .onReceive(NotificationCenter.default.publisher(for: .pocketPushError)) { note in model.pushMessage = note.object as? String ?? "通知登録に失敗しました" }
+                .onReceive(NotificationCenter.default.publisher(for: .pocketPushError)) { note in model.pushMessage = note.object as? String ?? L10n.string("通知登録に失敗しました") }
                 .alert("確認してください", isPresented: Binding(get: { model.error != nil }, set: { if !$0 { model.error = nil } })) { Button("閉じる", role: .cancel) { model.error = nil } } message: { Text(model.error ?? "") }
         }
     }

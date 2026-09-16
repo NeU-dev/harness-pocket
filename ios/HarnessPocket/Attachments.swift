@@ -19,17 +19,17 @@ struct DraftAttachment: Identifiable, Codable {
         var bytes = data
         var fileName = name
         if image {
-            guard let source = UIImage(data: data) else { throw PocketError.message("画像を読み込めませんでした") }
+            guard let source = UIImage(data: data) else { throw PocketError.message(L10n.string("画像を読み込めませんでした")) }
             let scale = min(1, 2048 / max(source.size.width, source.size.height))
             let format = UIGraphicsImageRendererFormat(); format.scale = 1; format.opaque = true
             let rendered = UIGraphicsImageRenderer(size: CGSize(width: source.size.width * scale, height: source.size.height * scale), format: format).image { context in
                 UIColor.white.setFill(); context.fill(CGRect(origin: .zero, size: CGSize(width: source.size.width * scale, height: source.size.height * scale)))
                 source.draw(in: CGRect(x: 0, y: 0, width: source.size.width * scale, height: source.size.height * scale))
             }
-            guard let jpeg = rendered.jpegData(compressionQuality: 0.85) else { throw PocketError.message("画像を変換できませんでした") }
+            guard let jpeg = rendered.jpegData(compressionQuality: 0.85) else { throw PocketError.message(L10n.string("画像を変換できませんでした")) }
             bytes = jpeg; fileName = (name as NSString).deletingPathExtension + ".jpg"
         }
-        guard bytes.count <= 10 * 1024 * 1024 else { throw PocketError.message("添付は1個10MBまでです") }
+        guard bytes.count <= 10 * 1024 * 1024 else { throw PocketError.message(L10n.string("添付は1個10MBまでです")) }
         let item = DraftAttachment(id: UUID().uuidString, name: fileName, kind: image ? "image" : "file", mediaType: image ? "image/jpeg" : "application/octet-stream", size: bytes.count)
         try bytes.write(to: item.url, options: [.atomic, .completeFileProtection])
         return item
@@ -49,7 +49,7 @@ struct AttachmentStrip: View {
                             DraftThumbnail(item: item)
                         } else { Image(systemName: "doc").foregroundStyle(PocketTheme.accent) }
                         VStack(alignment: .leading) { Text(item.name).lineLimit(1); Text(ByteCountFormatter.string(fromByteCount: Int64(item.size), countStyle: .file)).foregroundStyle(PocketTheme.secondary) }.font(.caption).frame(maxWidth: 150)
-                        if let remove { Button { remove(item) } label: { Image(systemName: "xmark.circle.fill") }.accessibilityLabel("\(item.name)を外す") }
+                        if let remove { Button { remove(item) } label: { Image(systemName: "xmark.circle.fill") }.accessibilityLabel(L10n.format("%@を外す", item.name)) }
                     }.padding(8).background(PocketTheme.surface, in: RoundedRectangle(cornerRadius: 12))
                 }
             }
@@ -84,7 +84,7 @@ struct MessageAttachment: Identifiable, Equatable {
     init(_ value: [String: Any]) {
         id = value["attachmentId"] as? String ?? value["path"] as? String ?? UUID().uuidString
         kind = value["kind"] as? String ?? "file"
-        name = value["name"] as? String ?? "添付ファイル"
+        name = value["name"] as? String ?? L10n.string("添付ファイル")
         path = value["path"] as? String ?? ""
     }
 }
@@ -103,7 +103,7 @@ struct SentAttachmentView: View {
             do {
                 let result = try await api.request("v1/sessions/\(sessionID)/attachment", query: [URLQueryItem(name: "id", value: attachment.id)])
                 if let base64 = result["data"] as? String, let bytes = Data(base64Encoded: base64) { image = UIImage(data: bytes) }
-            } catch { self.error = "画像を読み込めませんでした" }
+            } catch { self.error = L10n.string("画像を読み込めませんでした") }
         }
     }
 }

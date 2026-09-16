@@ -10,7 +10,7 @@ struct ApprovalCard: View {
     var body: some View {
         VStack(alignment: .leading, spacing: 15) {
             HStack(spacing: 10) {
-                Label(approval.event == "approval/request" ? "操作の承認" : "回答を待っています", systemImage: approval.event == "approval/request" ? "hand.raised" : "bubble.left.and.bubble.right")
+                Label(L10n.string(approval.event == "approval/request" ? "操作の承認" : "回答を待っています"), systemImage: approval.event == "approval/request" ? "hand.raised" : "bubble.left.and.bubble.right")
                     .font(.headline).foregroundStyle(PocketTheme.text)
             }
             if approval.event == "approval/request" {

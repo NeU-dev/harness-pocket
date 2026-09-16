@@ -33,15 +33,21 @@ struct PermissionSettingsView: View {
                     }.disabled(saving || current == option)
                 }
                 if options.isEmpty { Text("DGXの権限設定を読み込んでいます").foregroundStyle(PocketTheme.secondary) }
-            } header: { Text(currentConversation ? "この会話の権限" : "次に作る会話の権限") }
+            } header: { Text(L10n.string(currentConversation ? "この会話の権限" : "次に作る会話の権限")) }
               footer: { Text("ボタンを選ぶとDGXに保存されます。既定値を変えても、既存の会話の設定は変わりません。") }
             if saving { ProgressView("保存中…") }
             if let localError { Text(localError).foregroundStyle(.red) }
         }.navigationTitle("権限と承認").navigationBarTitleDisplayMode(.inline)
         .task { if model.chat == nil { currentConversation = false }; await model.perform { try await model.loadSettings() } }
     }
-    private func title(_ value: String) -> String { ["read-only": "読み取りのみ", "workspace-write": "作業フォルダ内の変更を許可", "danger-full-access": "すべて許可（確認なし）"][value] ?? value }
-    private func detail(_ value: String) -> String { ["read-only": "変更が必要な操作では、許可を確認します。", "workspace-write": "作業フォルダと許可された一時フォルダ内を変更できます。範囲外の操作は確認します。", "danger-full-access": "DGX上のファイルへ広くアクセスし、承認の確認を省略します。"][value] ?? "DGXに登録された権限プリセットです。" }
+    private func title(_ value: String) -> String { ["read-only": "読み取りのみ", "workspace-write": "作業フォルダ内の変更を許可", "danger-full-access": "すべて許可（確認なし）"][value].map(L10n.string) ?? value }
+    private func detail(_ value: String) -> String {
+        L10n.string([
+            "read-only": "変更が必要な操作では、許可を確認します。",
+            "workspace-write": "作業フォルダと許可された一時フォルダ内を変更できます。範囲外の操作は確認します。",
+            "danger-full-access": "DGX上のファイルへ広くアクセスし、承認の確認を省略します。"
+        ][value] ?? "DGXに登録された権限プリセットです。")
+    }
     private func select(_ option: String) {
         saving = true; localError = nil
         let sessionID = currentConversation ? model.currentID : nil

@@ -46,7 +46,7 @@ struct DirectoryPickerView: View {
                         }
                     }
                     if entries.isEmpty {
-                        Text(search.isEmpty ? "表示できるサブフォルダはありません" : "一致するフォルダはありません")
+                        Text(L10n.string(search.isEmpty ? "表示できるサブフォルダはありません" : "一致するフォルダはありません"))
                             .foregroundStyle(PocketTheme.secondary)
                     }
                 } header: { Text("フォルダを開く") }
@@ -55,7 +55,7 @@ struct DirectoryPickerView: View {
                 }
                 .disabled(loading || saving)
             }
-            if loading || saving { HStack { ProgressView(); Text(saving ? "作業場所を設定中…" : "DGXのフォルダを読み込み中…") }.font(.subheadline) }
+            if loading || saving { HStack { ProgressView(); Text(L10n.string(saving ? "作業場所を設定中…" : "DGXのフォルダを読み込み中…")) }.font(.subheadline) }
             if let error {
                 Section {
                     Text(error).foregroundStyle(PocketTheme.secondary)

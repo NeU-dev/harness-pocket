@@ -49,7 +49,7 @@ struct ChatView: View {
                     for url in urls {
                         let access = url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }
                         let values = try url.resourceValues(forKeys: [.fileSizeKey, .contentTypeKey])
-                        guard (values.fileSize ?? 0) <= 10 * 1024 * 1024 else { throw PocketError.message("添付は1個10MBまでです") }
+                        guard (values.fileSize ?? 0) <= 10 * 1024 * 1024 else { throw PocketError.message(L10n.string("添付は1個10MBまでです")) }
                         try model.addAttachment(data: Data(contentsOf: url), name: url.lastPathComponent, image: values.contentType?.conforms(to: .image) == true)
                     }
                 } catch { model.error = error.localizedDescription }
@@ -59,7 +59,7 @@ struct ChatView: View {
                 model.importing = true
                 Task { @MainActor in
                     defer { photos = []; model.importing = false }
-                    do { for item in items { if let data = try await item.loadTransferable(type: Data.self) { try model.addAttachment(data: data, name: "写真.jpg", image: true) } } }
+                    do { for item in items { if let data = try await item.loadTransferable(type: Data.self) { try model.addAttachment(data: data, name: L10n.string("写真.jpg"), image: true) } } }
                     catch { model.error = error.localizedDescription }
                 }
             }
@@ -86,24 +86,24 @@ struct ChatView: View {
                 if ProcessInfo.processInfo.arguments.contains("--welcome-qa") { model.newChat(); model.draft = "" }
                 if ProcessInfo.processInfo.arguments.contains("--question-qa") {
                     model.draft = ""
-                    model.chat = ChatSnapshot(["id": "question-qa", "title": "質問の表示確認", "messages": [["id": "qa-user", "role": "user", "text": "次の作業を一緒に決めよう。"]], "approvals": [["eventId": "qa-question", "event": "user-questions/request", "request": ["questions": [["id": "next", "question": "どちらから進めましょう？", "options": [["label": "画面の使いやすさ"], ["label": "通知の確認"]]]]]]]])
+                    model.chat = ChatSnapshot(["id": "question-qa", "title": L10n.string("質問の表示確認"), "messages": [["id": "qa-user", "role": "user", "text": L10n.string("次の作業を一緒に決めよう。")]], "approvals": [["eventId": "qa-question", "event": "user-questions/request", "request": ["questions": [["id": "next", "question": L10n.string("どちらから進めましょう？"), "options": [["label": L10n.string("画面の使いやすさ")], ["label": L10n.string("通知の確認")]]]]]]]])
                 }
                 if ProcessInfo.processInfo.arguments.contains("--scroll-qa") {
-                    let rows: [[String: Any]] = (0..<35).map { index in ["id": "qa-\(index)", "role": "assistant", "text": "回答 \(index)\n" + String(repeating: "長い会話のスクロールを確認します。\n", count: 12), "reasoning": String(repeating: "推論の長さによって画面の高さが変わります。\n", count: 8)] }
-                    model.chat = ChatSnapshot(["id": "scroll-qa", "title": "スクロール検証", "messages": rows + [["id": "last", "role": "assistant", "text": "最下部の確認：ここが最後のメッセージです。"]]])
+                    let rows: [[String: Any]] = (0..<35).map { index in ["id": "qa-\(index)", "role": "assistant", "text": L10n.format("回答 %lld\n", Int64(index)) + String(repeating: L10n.string("長い会話のスクロールを確認します。\n"), count: 12), "reasoning": String(repeating: L10n.string("推論の長さによって画面の高さが変わります。\n"), count: 8)] }
+                    model.chat = ChatSnapshot(["id": "scroll-qa", "title": L10n.string("スクロール検証"), "messages": rows + [["id": "last", "role": "assistant", "text": L10n.string("最下部の確認：ここが最後のメッセージです。")]]])
                 }
                 if ProcessInfo.processInfo.arguments.contains("--attachment-qa") {
                     model.newChat()
                     for item in model.attachments { model.removeAttachment(item) }
-                    try? model.addAttachment(data: Data("添付テストの合言葉は POCKET_FILE_731 です。".utf8), name: "検証ファイル.txt", image: false)
+                    try? model.addAttachment(data: Data(L10n.string("添付テストの合言葉は POCKET_FILE_731 です。").utf8), name: L10n.string("検証ファイル.txt"), image: false)
                     let renderer = UIGraphicsImageRenderer(size: CGSize(width: 120, height: 120))
                     let image = renderer.image { context in UIColor.red.setFill(); context.fill(CGRect(x: 0, y: 0, width: 120, height: 120)) }
-                    if let data = image.pngData() { try? model.addAttachment(data: data, name: "赤い画像.png", image: true) }
-                    model.draft = "添付のテキストファイルの合言葉と、画像の色を答えてください。ファイルは変更しないでください。"
+                    if let data = image.pngData() { try? model.addAttachment(data: data, name: L10n.string("赤い画像.png"), image: true) }
+                    model.draft = L10n.string("添付のテキストファイルの合言葉と、画像の色を答えてください。ファイルは変更しないでください。")
                 }
                 if ProcessInfo.processInfo.arguments.contains("--keyboard") {
                     model.newChat()
-                    model.draft = "入力中の文章が見えるか確認します。\n複数行のメッセージでも\nキーボードの上に入力欄が収まり\n最後の行まで確認できます。"
+                    model.draft = L10n.string("入力中の文章が見えるか確認します。\n複数行のメッセージでも\nキーボードの上に入力欄が収まり\n最後の行まで確認できます。")
                     try? await Task.sleep(for: .milliseconds(400))
                     composing = true
                 }
@@ -139,7 +139,7 @@ struct ChatView: View {
         }
     }
     private func suggestion(_ title: String, _ text: String, icon: String) -> some View {
-        Button { model.draft = text; composing = true } label: { HStack { Image(systemName: icon).frame(width: 24).foregroundStyle(PocketTheme.accent); Text(title).font(.subheadline); Spacer(); Image(systemName: "arrow.up.left").font(.caption).foregroundStyle(PocketTheme.secondary) }.padding(16).background(.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 16)).overlay(RoundedRectangle(cornerRadius: 16).stroke(.primary.opacity(0.055))) }.foregroundStyle(PocketTheme.text)
+        Button { model.draft = L10n.string(text); composing = true } label: { HStack { Image(systemName: icon).frame(width: 24).foregroundStyle(PocketTheme.accent); Text(L10n.string(title)).font(.subheadline); Spacer(); Image(systemName: "arrow.up.left").font(.caption).foregroundStyle(PocketTheme.secondary) }.padding(16).background(.background.opacity(0.6), in: RoundedRectangle(cornerRadius: 16)).overlay(RoundedRectangle(cornerRadius: 16).stroke(.primary.opacity(0.055))) }.foregroundStyle(PocketTheme.text)
     }
     private var transcript: some View {
         ScrollViewReader { proxy in
@@ -152,7 +152,7 @@ struct ChatView: View {
                     }
                     ForEach(model.chat?.approvals ?? []) { approval in ApprovalCard(approval: approval) }
                     if model.chat?.running == true { HStack(spacing: 9) { ProgressView().controlSize(.small); Text("DGXで処理中…").font(.caption).foregroundStyle(PocketTheme.secondary) } }
-                    if let error = model.chat?.error { Label(error, systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(.orange) }
+                    if let error = model.chat?.error { Label(L10n.string(error), systemImage: "exclamationmark.triangle").font(.footnote).foregroundStyle(.orange) }
                     if ["aborted", "interrupted", "max-tokens", "blocked"].contains(model.chat?.endReason ?? "") { Text("処理は中断または上限に達しました。内容を確認して続けられます。").font(.caption).foregroundStyle(PocketTheme.secondary) }
                     Color.clear.frame(height: 1).id("bottom").background(GeometryReader { geometry in Color.clear.preference(key: BottomPositionKey.self, value: geometry.frame(in: .named("transcript")).maxY) })
                 }.padding(.horizontal, 20).padding(.vertical, 24).frame(maxWidth: 750).frame(maxWidth: .infinity)
@@ -202,10 +202,10 @@ struct ChatView: View {
                     Task { if model.chat?.running == true && model.draft.isEmpty && model.attachments.isEmpty { await model.stop() } else { await model.send() } }
                 } label: {
                     Image(systemName: model.chat?.running == true && model.draft.isEmpty && model.attachments.isEmpty ? "stop.fill" : "arrow.up").font(.system(size: 16, weight: .bold)).foregroundStyle(.white).frame(width: 37, height: 37).background(model.connected ? PocketTheme.buttonFill : Color.gray, in: Circle())
-                }.padding(6).disabled(!model.connected || model.busy || model.importing || (model.draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && model.attachments.isEmpty && model.chat?.running != true)).accessibilityLabel(model.chat?.running == true && model.draft.isEmpty && model.attachments.isEmpty ? "回答を停止" : "送信")
+                }.padding(6).disabled(!model.connected || model.busy || model.importing || (model.draft.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty && model.attachments.isEmpty && model.chat?.running != true)).accessibilityLabel(L10n.string(model.chat?.running == true && model.draft.isEmpty && model.attachments.isEmpty ? "回答を停止" : "送信"))
             }.background(.background, in: RoundedRectangle(cornerRadius: 27)).overlay(RoundedRectangle(cornerRadius: 27).stroke(.primary.opacity(0.08)))
             if !composing {
-                Text(model.chat?.running == true ? "画面を閉じても、DGXで処理を続けます" : "Harness Pocket · あなたのDGXとつながる").font(.system(size: 11)).foregroundStyle(PocketTheme.secondary)
+                Text(L10n.string(model.chat?.running == true ? "画面を閉じても、DGXで処理を続けます" : "Harness Pocket · あなたのDGXとつながる")).font(.system(size: 11)).foregroundStyle(PocketTheme.secondary)
             }
         }.padding(.horizontal, 16).padding(.top, 10).padding(.bottom, 6).background(PocketTheme.background)
     }
@@ -258,7 +258,7 @@ struct ReasoningView: View {
         } label: {
             HStack(spacing: 8) {
                 Image(systemName: "brain").foregroundStyle(PocketTheme.accent)
-                Text(streaming ? "推論中" : "推論内容").font(.subheadline.weight(.semibold)).foregroundStyle(PocketTheme.text)
+                Text(L10n.string(streaming ? "推論中" : "推論内容")).font(.subheadline.weight(.semibold)).foregroundStyle(PocketTheme.text)
                 if streaming { ProgressView().controlSize(.small).tint(PocketTheme.accent) }
             }
         }.tint(PocketTheme.accent).padding(15).background(PocketTheme.surface, in: RoundedRectangle(cornerRadius: 15))

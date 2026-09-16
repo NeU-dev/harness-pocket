@@ -21,7 +21,7 @@ Node.js gateway and private Tailscale HTTPS access.
   <img src="docs/images/chat.png" width="245" alt="A conversation in the native iPhone app">
   <img src="docs/images/question.png" width="245" alt="A question with tappable answer choices">
 </p>
-<p align="center"><sub>Actual Simulator screenshots using bundled demo data. The app UI is currently Japanese.</sub></p>
+<p align="center"><sub>Actual Simulator screenshots using bundled Japanese demo data. The app UI supports Japanese and English.</sub></p>
 
 ## What you can do
 
@@ -103,7 +103,7 @@ See [Contributing](CONTRIBUTING.md) for preview modes and project generation.
 This is an early project extracted from a daily-use personal client.
 
 - **DSH-specific:** it is not a general client for every agent backend. The inspected upstream revision and event contract are in [UPSTREAM.md](docs/UPSTREAM.md).
-- **Japanese app UI:** English localization is welcome; the setup documentation is bilingual.
+- **Japanese and English UI:** the app follows the iPhone's preferred language or its per-app language setting; the setup documentation is bilingual.
 - **File fallback:** on DSH versions without a general file upload API, files are retained privately on the host and referenced by path. Image input depends on the configured model's capabilities.
 - **Notifications:** Apple acceptance does not guarantee immediate display. Focus modes, connectivity and iOS settings affect delivery. Question notifications are held during DSH disconnection until the question is reannounced.
 - **Device performance:** Simulator checks are recorded, but real-device temperature and power consumption have not been measured.

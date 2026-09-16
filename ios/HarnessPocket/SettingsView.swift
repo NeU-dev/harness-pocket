@@ -11,15 +11,15 @@ struct SettingsView: View {
         NavigationStack {
             Form {
                 Section("接続") {
-                    LabeledContent("DGX Spark", value: model.connected ? "接続中" : "再接続中")
+                    LabeledContent("DGX Spark", value: L10n.string(model.connected ? "接続中" : "再接続中"))
                     Text(model.serverURL).font(.caption).foregroundStyle(PocketTheme.secondary).textSelection(.enabled)
                     NavigationLink("接続を確認・修復") { ConnectionSettingsView() }
                     NavigationLink("登録済み端末") { DevicesView() }
                 }
                 Section("完了・確認待ちの通知") {
                     Toggle("完了・権限確認・質問を通知", isOn: Binding(get: { model.notificationsEnabled }, set: { enabled in Task { await model.enableNotifications(enabled) } }))
-                    LabeledContent("Appleへの送信設定", value: model.apnsConfigured ? "設定済み" : "キーの登録が必要")
-                    LabeledContent("このiPhone", value: model.notificationDeviceRegistered ? "登録済み" : "未登録")
+                    LabeledContent("Appleへの送信設定", value: L10n.string(model.apnsConfigured ? "設定済み" : "キーの登録が必要"))
+                    LabeledContent("このiPhone", value: L10n.string(model.notificationDeviceRegistered ? "登録済み" : "未登録"))
                     NavigationLink("通知の設定・接続テスト") { NotificationSettingsView() }
                 }
                 Section("表示") {
@@ -81,14 +81,14 @@ struct SettingsObjectView: View {
                         }
                     }
                 }
-            } footer: { Text(namespace.applies == "restart" ? "この設定はHarness再起動後に反映されます。" : "保存した設定はHarness側へ反映されます。") }
+            } footer: { Text(L10n.string(namespace.applies == "restart" ? "この設定はHarness再起動後に反映されます。" : "保存した設定はHarness側へ反映されます。")) }
             if object.isEmpty { Text("現在この項目には設定がありません。").foregroundStyle(PocketTheme.secondary) }
         }
     }
     private func summary(_ value: Any?) -> String {
-        guard let value else { return "未設定" }
-        if let n = value as? NSNumber, CFGetTypeID(n) == CFBooleanGetTypeID() { return n.boolValue ? "オン" : "オフ" }
-        if let a = value as? [Any] { return "\(a.count)件" }
+        guard let value else { return L10n.string("未設定") }
+        if let n = value as? NSNumber, CFGetTypeID(n) == CFBooleanGetTypeID() { return L10n.string(n.boolValue ? "オン" : "オフ") }
+        if let a = value as? [Any] { return L10n.format("%lld件", Int64(a.count)) }
         return String(describing: value)
     }
 }
@@ -108,7 +108,7 @@ struct SettingEditor: View {
     private var isArray: Bool { initialValue is [Any] }
     var body: some View {
         Form {
-            Section(path.last ?? "設定") {
+            Section(path.last ?? L10n.string("設定")) {
                 if isBool { Toggle("有効", isOn: $boolean) }
                 else if isNumber { TextField("値", text: $text).keyboardType(.numbersAndPunctuation) }
                 else { TextEditor(text: $text).frame(minHeight: 160).textInputAutocapitalization(.never).autocorrectionDisabled() }
@@ -116,7 +116,7 @@ struct SettingEditor: View {
             if isArray { Text("配列の詳細設定です。JSON形式で編集できます。").font(.caption).foregroundStyle(PocketTheme.secondary) }
             if let localError { Text(localError).foregroundStyle(.red).font(.footnote) }
             Button("保存") { Task { await save() } }.disabled(saving)
-        }.navigationTitle(path.last ?? "設定").navigationBarTitleDisplayMode(.inline)
+        }.navigationTitle(path.last ?? L10n.string("設定")).navigationBarTitleDisplayMode(.inline)
             .task {
                 revision = model.namespaces.first { $0.name == namespaceName }?.revision
                 if isBool { boolean = (initialValue as? NSNumber)?.boolValue ?? false }
@@ -127,10 +127,10 @@ struct SettingEditor: View {
     private func save() async {
         saving = true; defer { saving = false }
         do {
-            guard let revision, let api = model.api else { throw PocketError.message("設定を読み直してください") }
+            guard let revision, let api = model.api else { throw PocketError.message(L10n.string("設定を読み直してください")) }
             let value: Any
             if isBool { value = boolean }
-            else if isNumber { guard let number = Double(text), number.isFinite else { throw PocketError.message("数値を入力してください") }; value = number }
+            else if isNumber { guard let number = Double(text), number.isFinite else { throw PocketError.message(L10n.string("数値を入力してください")) }; value = number }
             else if isArray { value = try JSONSerialization.jsonObject(with: Data(text.utf8)) }
             else { value = text }
             _ = try await api.request("v1/settings", method: "PATCH", body: ["ns": namespaceName, "expectedRevision": revision, "ops": [["op": "set", "path": path, "value": value]]])
@@ -177,9 +177,9 @@ struct ProviderView: View {
                 SecureField("APIキー", text: $key)
             }.textInputAutocapitalization(.never).autocorrectionDisabled()
             Button("追加する") { Task { await model.perform {
-                guard provider.range(of: "^[a-z][a-z0-9-]{0,48}$", options: .regularExpression) != nil else { throw PocketError.message("識別名は小文字・数字・ハイフンで指定してください") }
-                guard let namespace = model.namespaces.first(where: { $0.name == "llm-pi-ai" }), let api = model.api else { throw PocketError.message("モデル接続設定を読み込んでください") }
-                if (namespace.value["providers"] as? [String: Any])?[provider] != nil { throw PocketError.message("同じ識別名が登録済みです") }
+                guard provider.range(of: "^[a-z][a-z0-9-]{0,48}$", options: .regularExpression) != nil else { throw PocketError.message(L10n.string("識別名は小文字・数字・ハイフンで指定してください")) }
+                guard let namespace = model.namespaces.first(where: { $0.name == "llm-pi-ai" }), let api = model.api else { throw PocketError.message(L10n.string("モデル接続設定を読み込んでください")) }
+                if (namespace.value["providers"] as? [String: Any])?[provider] != nil { throw PocketError.message(L10n.string("同じ識別名が登録済みです")) }
                 let ref = "POCKET_" + provider.replacingOccurrences(of: "-", with: "_").uppercased() + "_API_KEY"
                 if !key.isEmpty { _ = try await api.request("v1/credentials", method: "POST", body: ["ref": ref, "value": key]) }
                 let value: [String: Any] = ["name": display.isEmpty ? provider : display, "baseURL": baseURL, "api": apiProtocol, "apiKeyEnv": ref, "models": [["id": modelID, "name": modelID]]]
@@ -202,26 +202,26 @@ struct NotificationSettingsView: View {
             Section("このiPhone") {
                 Button("通知を許可して登録") { Task { await model.enableNotifications(true) } }
                 if !model.pushMessage.isEmpty { Text(model.pushMessage).font(.caption) }
-                Button("テスト通知を送信") { Task { await model.perform { _ = try await model.api?.request("v1/push/test", method: "POST", body: [:]); message = "Appleがテスト通知を受け付けました" } } }.disabled(!model.apnsConfigured || !model.notificationDeviceRegistered)
+                Button("テスト通知を送信") { Task { await model.perform { _ = try await model.api?.request("v1/push/test", method: "POST", body: [:]); message = L10n.string("Appleがテスト通知を受け付けました") } } }.disabled(!model.apnsConfigured || !model.notificationDeviceRegistered)
             }
             Section("Apple通知キー（初回のみ）") {
                 Text("DGXからiPhoneへ通知するための設定です。Apple DeveloperでAPNsキーを作成し、ここからDGXへ登録します。").font(.footnote).foregroundStyle(PocketTheme.secondary)
                 Link("Apple Developerのキー管理を開く", destination: URL(string: "https://developer.apple.com/account/resources/authkeys/list")!)
                 TextField("Key ID", text: $keyID).textInputAutocapitalization(.characters).autocorrectionDisabled()
                 TextField("Team ID", text: $teamID).textInputAutocapitalization(.characters).autocorrectionDisabled()
-                Button(fileName.isEmpty ? ".p8 ファイルを選択" : fileName) { importKey = true }
+                Button(fileName.isEmpty ? L10n.string(".p8 ファイルを選択") : fileName) { importKey = true }
                 LabeledContent("Bundle ID", value: Bundle.main.bundleIdentifier ?? "").font(.caption)
                 Button("通知キーをDGXへ保存") { Task { await model.perform {
                     guard let api = model.api else { return }
                     _ = try await api.request("v1/push/config", method: "POST", body: ["keyId": keyID, "teamId": teamID, "privateKey": privateKey, "topic": Bundle.main.bundleIdentifier ?? ""])
-                    privateKey = ""; fileName = ""; try await model.loadSettings(); message = "通知キーを保存しました。テスト通知で確認できます。"
+                    privateKey = ""; fileName = ""; try await model.loadSettings(); message = L10n.string("通知キーを保存しました。テスト通知で確認できます。")
                 } } }.disabled(keyID.count != 10 || teamID.count != 10 || privateKey.isEmpty)
             }
             if !message.isEmpty { Text(message).font(.footnote).foregroundStyle(PocketTheme.accent) }
             Section { Text("回答の完了、操作の許可、質問への回答を待っている時に通知します。会話の本文はロック画面へ載せず、タップすると該当する会話が開きます。iPhoneの集中モードや通知設定によって表示が遅れることがあります。").font(.caption).foregroundStyle(PocketTheme.secondary) }
         }.navigationTitle("通知").navigationBarTitleDisplayMode(.inline)
             .fileImporter(isPresented: $importKey, allowedContentTypes: [.data]) { result in
-                do { let url = try result.get(); let access = url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }; let data = try Data(contentsOf: url); guard data.count < 20_000, let text = String(data: data, encoding: .utf8), text.contains("BEGIN PRIVATE KEY") else { throw PocketError.message("APNsの.p8ファイルを選択してください") }; privateKey = text; fileName = url.lastPathComponent } catch { model.error = error.localizedDescription }
+                do { let url = try result.get(); let access = url.startAccessingSecurityScopedResource(); defer { if access { url.stopAccessingSecurityScopedResource() } }; let data = try Data(contentsOf: url); guard data.count < 20_000, let text = String(data: data, encoding: .utf8), text.contains("BEGIN PRIVATE KEY") else { throw PocketError.message(L10n.string("APNsの.p8ファイルを選択してください")) }; privateKey = text; fileName = url.lastPathComponent } catch { model.error = error.localizedDescription }
             }
     }
 }
@@ -231,7 +231,7 @@ struct DevicesView: View {
     @State private var revokeID: String?
     var body: some View {
         List {
-            ForEach(devices.indices, id: \.self) { i in HStack { Text(devices[i]["name"] as? String ?? "iPhone"); Spacer(); if devices[i]["current"] as? Bool == true { Text("この端末").font(.caption).foregroundStyle(PocketTheme.secondary) } else { Button("解除", role: .destructive) { revokeID = devices[i]["id"] as? String } } } }
+            ForEach(devices.indices, id: \.self) { i in HStack { Text(devices[i]["name"] as? String ?? "iPhone"); Spacer(); if devices[i]["current"] as? Bool == true { Text(L10n.string("この端末")).font(.caption).foregroundStyle(PocketTheme.secondary) } else { Button("解除", role: .destructive) { revokeID = devices[i]["id"] as? String } } } }
         }.navigationTitle("登録済み端末").task { await load() }
             .confirmationDialog("この端末の接続を解除しますか？", isPresented: Binding(get: { revokeID != nil }, set: { if !$0 { revokeID = nil } })) { Button("解除", role: .destructive) { Task { await model.perform { if let id = revokeID { _ = try await model.api?.request("v1/devices/\(id)", method: "DELETE"); await load() } } } } }
     }

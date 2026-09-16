@@ -43,7 +43,8 @@ test('questions notify once with no question text and stop on answer, disconnect
   const restored = new Store(directory); restored.questionAsked('session-a', 'question-1');
   assert.equal(Object.keys(restored.state.outbox).length, 1);
   const item = Object.values(restored.state.outbox)[0];
-  assert.match(notificationPayload(item).aps.alert.body, /質問/);
+  assert.equal(notificationPayload(item).aps.alert['loc-key'], 'POCKET_NOTIFICATION_QUESTION');
+  assert.equal(notificationPayload(item).aps.alert.body, undefined);
   assert.equal(notificationPayload(item).sessionId, 'session-a');
   let sends = 0;
   await new NotificationWorker(restored, { send: async () => { sends++; return { status: 200 }; } }).drain();
@@ -76,7 +77,8 @@ test('approval notifications survive restart, deduplicate, and expire when answe
   assert.equal(items[0].kind, 'approval');
   const payload = notificationPayload(items[0]);
   assert.equal(payload.sessionId, 'session-a');
-  assert.match(payload.aps.alert.body, /許可/);
+  assert.equal(payload.aps.alert['loc-key'], 'POCKET_NOTIFICATION_APPROVAL');
+  assert.equal(payload.aps.alert.body, undefined);
   assert.ok(!JSON.stringify(payload).includes('private command'));
   restored.observe('session-a', [{ seq: 12, type: 'approval/decided', data: { id: 'approval-1', outcome: 'allowed-once' } }], 12);
   await new NotificationWorker(restored, { send: async () => assert.fail('answered approval must not notify') }).drain();
@@ -104,6 +106,12 @@ test('notify only completed turns; not tool steps, errors, cancellation, baselin
   assert.equal(Object.keys(store.state.outbox).length, 1);
   store.observe('session-a', [event(16, 'turn/end', 'completed')], 16, { baseline: true });
   assert.equal(Object.keys(store.state.outbox).length, 1);
+});
+test('notification payloads select localized text on the receiving iPhone', () => {
+  assert.equal(notificationPayload({ id: 'test', sessionId: '' }, true).aps.alert['loc-key'], 'POCKET_NOTIFICATION_TEST');
+  assert.equal(notificationPayload({ id: 'done', sessionId: 'session-a', kind: 'completed' }).aps.alert['loc-key'], 'POCKET_NOTIFICATION_COMPLETE');
+  assert.equal(notificationPayload({ id: 'question', sessionId: 'session-a', kind: 'question' }).aps.alert['loc-key'], 'POCKET_NOTIFICATION_QUESTION');
+  assert.equal(notificationPayload({ id: 'approval', sessionId: 'session-a', kind: 'approval' }).aps.alert['loc-key'], 'POCKET_NOTIFICATION_APPROVAL');
 });
 test('persist cursor and outbox together; retry after a gateway restart without enqueueing duplicates', async t => {
   const { store, directory } = fixture(t);

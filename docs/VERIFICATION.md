@@ -21,6 +21,21 @@ signing records are not included in this repository.
 - A generic test notification was accepted by Apple APNs with HTTP 200 on the maintainer's deployment. This is not proof of device display or every question/approval path.
 - Streaming workload: 80 history rows and 60 updates took about **1.32 seconds of CPU time** over **15.56 seconds elapsed** on iPhone 17 Pro / iOS 26.1 Simulator after stream batching and lazy rendering. These are Simulator measurements, not an iPhone thermal or battery benchmark.
 
+## Japanese and English UI — 2026-09-10
+
+- Added Japanese-source string catalogs with English translations for the app UI, client and gateway errors, demo data, camera and local-network permission descriptions.
+- APNs payloads now use localization keys, so completion, approval, question and test notifications are rendered in the receiving iPhone's app language without sending conversation text.
+- Gateway: **31 tests passed**, including all four notification localization keys and the absence of literal notification bodies.
+- Unsigned Debug Simulator and Release device builds passed on Xcode 26.1.1. Visually checked the English welcome, question and settings screens, then relaunched the welcome screen in Japanese on the dedicated iPhone 17 Pro / iOS 26.1 Simulator.
+- Physical-device notification language, layout and delivery were not re-tested in this localization pass.
+
+## Connection-state regression — 2026-09-16
+
+- A failed session, model or workspace refresh no longer closes an otherwise healthy mobile WebSocket or starts a reconnect loop.
+- A local mock gateway deliberately returned HTTP 500 for the initial session refresh. The app kept one WebSocket connection and continued to show the connected state for more than 13 seconds.
+- The private Tailscale HTTPS health endpoint returned HTTP 200 in 20 consecutive requests. This confirms gateway reachability, not the internal DSH connection state.
+- Signed Debug Simulator and unsigned Release device builds passed on Xcode 26.1. The live physical-iPhone connection still needs confirmation after installing the updated build.
+
 ## Not yet established
 
 - Physical-device temperature and power consumption.

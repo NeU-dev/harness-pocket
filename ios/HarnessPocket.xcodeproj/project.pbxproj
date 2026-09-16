@@ -23,6 +23,9 @@
 		D2771F6ECA3CEBD4379A3ED0 /* PerformanceFixture.swift in Sources */ = {isa = PBXBuildFile; fileRef = D30899024A6C7300F648D650 /* PerformanceFixture.swift */; };
 		D8FBD148AA3167363CFA5DC8 /* Attachments.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2976D05BA65ABB216AF24E96 /* Attachments.swift */; };
 		E81A177879B3C59BD086B9D7 /* ConnectionSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 28FD47A50A259CAE9A3F8CA3 /* ConnectionSettingsView.swift */; };
+		C0A1B2C3D4E5F60718293A4B /* L10n.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A1B2C3D4E5F60718293A4B /* L10n.swift */; };
+		C2A1B2C3D4E5F60718293A4B /* Localizable.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C3A1B2C3D4E5F60718293A4B /* Localizable.xcstrings */; };
+		C4A1B2C3D4E5F60718293A4B /* InfoPlist.xcstrings in Resources */ = {isa = PBXBuildFile; fileRef = C5A1B2C3D4E5F60718293A4B /* InfoPlist.xcstrings */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -46,6 +49,9 @@
 		D43AD6822225634C6734BBB8 /* HarnessPocket.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HarnessPocket.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		DE64A3EAA599824ABF68DE80 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS18.0.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
 		F8D66B1F95C1D8A843EC56B2 /* DirectoryPickerView.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = DirectoryPickerView.swift; sourceTree = "<group>"; };
+		C1A1B2C3D4E5F60718293A4B /* L10n.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; path = L10n.swift; sourceTree = "<group>"; };
+		C3A1B2C3D4E5F60718293A4B /* Localizable.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = Localizable.xcstrings; sourceTree = "<group>"; };
+		C5A1B2C3D4E5F60718293A4B /* InfoPlist.xcstrings */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.json.xcstrings; path = InfoPlist.xcstrings; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +117,9 @@
 				0022344650B306CB5EAAE5B0 /* PermissionSettingsView.swift */,
 				0257010F92C603D274EA3267 /* PushNotifications.swift */,
 				307FA15729B4F0B92FD11361 /* SettingsView.swift */,
+				C1A1B2C3D4E5F60718293A4B /* L10n.swift */,
+				C3A1B2C3D4E5F60718293A4B /* Localizable.xcstrings */,
+				C5A1B2C3D4E5F60718293A4B /* InfoPlist.xcstrings */,
 				68ECCB4B9F049CD699B6EC09 /* Info.plist */,
 				8A7E2329E3A0E49F1AC214E2 /* HarnessPocket.entitlements */,
 				53D5C103C4B38E01799E4857 /* Assets.xcassets */,
@@ -159,10 +168,11 @@
 			};
 			buildConfigurationList = 0586E585DCC3E3708CFCB48C /* Build configuration list for PBXProject "HarnessPocket" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = en;
+			developmentRegion = ja;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				ja,
 				Base,
 			);
 			mainGroup = 3259DFFF046B5028464DE606;
@@ -183,6 +193,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				8633B04DB34E7CC521C73F6D /* Assets.xcassets in Resources */,
+				C2A1B2C3D4E5F60718293A4B /* Localizable.xcstrings in Resources */,
+				C4A1B2C3D4E5F60718293A4B /* InfoPlist.xcstrings in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -207,6 +219,7 @@
 				B0A9429F27702365279440C1 /* PermissionSettingsView.swift in Sources */,
 				0EEDD8E68683B60A0ED94F9D /* PushNotifications.swift in Sources */,
 				A929F222F9116F2F5EB8E425 /* SettingsView.swift in Sources */,
+				C0A1B2C3D4E5F60718293A4B /* L10n.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -24,7 +24,7 @@ struct PairingView: View {
                 }.padding(.horizontal, 27).padding(.bottom, 30).frame(maxWidth: 600)
             }.background(PocketTheme.background).task { url = model.serverURL }
                 .sheet(isPresented: $showScanner) { QRScanner { text in
-                    guard let data = text.data(using: .utf8), let json = try? JSONSerialization.jsonObject(with: data) as? [String: String], let server = json["url"], let value = json["code"] else { model.error = "Harness Pocketの登録QRコードを読み取ってください"; showScanner = false; return }
+                    guard let data = text.data(using: .utf8), let json = try? JSONSerialization.jsonObject(with: data) as? [String: String], let server = json["url"], let value = json["code"] else { model.error = L10n.string("Harness Pocketの登録QRコードを読み取ってください"); showScanner = false; return }
                     url = server; code = value; showScanner = false
                 } }
         }

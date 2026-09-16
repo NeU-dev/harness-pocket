@@ -7,11 +7,11 @@ import Darwin
     static func run(_ model: AppModel) async {
         guard ProcessInfo.processInfo.arguments.contains("--performance-qa") else { return }
         let history: [[String: Any]] = (0..<80).map { index in
-            ["id": "perf-\(index)", "role": "assistant", "text": String(repeating: "**回答**：長い会話を確認しています。\n", count: 24), "reasoning": String(repeating: "推論の内容も保持しています。\n", count: 40)]
+            ["id": "perf-\(index)", "role": "assistant", "text": String(repeating: L10n.string("**回答**：長い会話を確認しています。\n"), count: 24), "reasoning": String(repeating: L10n.string("推論の内容も保持しています。\n"), count: 40)]
         }
         func update(_ n: Int, running: Bool) {
             model.currentID = "performance-qa"
-            model.chat = ChatSnapshot(["id": "performance-qa", "running": running, "messages": history + [["id": "live", "role": "assistant", "streaming": running, "reasoning": String(repeating: "新しい推論の断片を受信しました。\n", count: 200 + n), "text": running ? "" : "負荷テスト完了"]]])
+            model.chat = ChatSnapshot(["id": "performance-qa", "running": running, "messages": history + [["id": "live", "role": "assistant", "streaming": running, "reasoning": String(repeating: L10n.string("新しい推論の断片を受信しました。\n"), count: 200 + n), "text": running ? "" : L10n.string("負荷テスト完了")]]])
         }
         update(0, running: true)
         try? await Task.sleep(for: .seconds(3))

@@ -19,12 +19,12 @@ enum Keychain {
         guard let value else { SecItemDelete(base as CFDictionary); return }
         let update = SecItemUpdate(base as CFDictionary, [kSecValueData as String: Data(value.utf8)] as CFDictionary)
         if update == errSecSuccess { return }
-        guard update == errSecItemNotFound else { throw PocketError.message("認証情報を保存できませんでした（\(update)）") }
+        guard update == errSecItemNotFound else { throw PocketError.message(L10n.format("認証情報を保存できませんでした（%lld）", Int64(update))) }
         var query = base
         query[kSecValueData as String] = Data(value.utf8)
         query[kSecAttrAccessible as String] = kSecAttrAccessibleWhenUnlockedThisDeviceOnly
         let status = SecItemAdd(query as CFDictionary, nil)
-        guard status == errSecSuccess else { throw PocketError.message("認証情報を安全に保存できませんでした（\(status)）") }
+        guard status == errSecSuccess else { throw PocketError.message(L10n.format("認証情報を安全に保存できませんでした（%lld）", Int64(status))) }
     }
 }
 @MainActor final class API {
@@ -39,12 +39,12 @@ enum Keychain {
         session = URLSession(configuration: config)
     }
     static func validate(_ text: String) throws -> URL {
-        guard let url = URL(string: text.trimmingCharacters(in: .whitespacesAndNewlines)), let host = url.host, url.user == nil, url.password == nil, url.query == nil, url.fragment == nil, (url.path.isEmpty || url.path == "/") else { throw PocketError.message("https:// から始まるアプリ用接続先を入力してください") }
+        guard let url = URL(string: text.trimmingCharacters(in: .whitespacesAndNewlines)), let host = url.host, url.user == nil, url.password == nil, url.query == nil, url.fragment == nil, (url.path.isEmpty || url.path == "/") else { throw PocketError.message(L10n.string("https:// から始まるアプリ用接続先を入力してください")) }
         if url.scheme == "https" { return url }
         #if DEBUG
         if url.scheme == "http", ["127.0.0.1", "localhost"].contains(host) { return url }
         #endif
-        throw PocketError.message("暗号化されたHTTPS接続先が必要です")
+        throw PocketError.message(L10n.string("暗号化されたHTTPS接続先が必要です"))
     }
     func request(_ path: String, method: String = "GET", body: [String: Any]? = nil, query: [URLQueryItem] = []) async throws -> [String: Any] {
         var components = URLComponents(url: baseURL.appendingPathComponent(path), resolvingAgainstBaseURL: false)!
@@ -57,11 +57,16 @@ enum Keychain {
         if let token { req.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization") }
         if let body { req.setValue("application/json", forHTTPHeaderField: "Content-Type"); req.httpBody = try JSONSerialization.data(withJSONObject: body) }
         let (data, response) = try await session.data(for: req)
-        guard let http = response as? HTTPURLResponse else { throw PocketError.message("サーバーからの応答がありません") }
+        guard let http = response as? HTTPURLResponse else { throw PocketError.message(L10n.string("サーバーからの応答がありません")) }
         let json = (try? JSONSerialization.jsonObject(with: data)) as? [String: Any] ?? [:]
         guard (200..<300).contains(http.statusCode) else {
-            if json["code"] as? String == "session/attachment-invalid" { throw PocketError.attachmentRejected(json["error"] as? String ?? "添付を受け付けられませんでした") }
-            throw PocketError.message(json["error"] as? String ?? "接続エラー（\(http.statusCode)）")
+            if json["code"] as? String == "session/attachment-invalid" { throw PocketError.attachmentRejected(L10n.string(json["error"] as? String ?? "添付を受け付けられませんでした")) }
+            let message = (json["error"] as? String).map { text in
+                let prefix = "Apple通知エラー: "
+                if text.hasPrefix(prefix) { return L10n.format("Apple通知エラー: %@", String(text.dropFirst(prefix.count))) }
+                return L10n.string(text)
+            }
+            throw PocketError.message(message ?? L10n.format("接続エラー（%lld）", Int64(http.statusCode)))
         }
         return json
     }

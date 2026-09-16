@@ -7,7 +7,7 @@ struct Conversation: Identifiable {
     var updatedAt: Double
     init(_ value: [String: Any]) {
         id = value["id"] as? String ?? ""
-        title = value["title"] as? String ?? "新しいチャット"
+        title = value["title"] as? String ?? L10n.string("新しいチャット")
         running = value["running"] as? Bool ?? false
         updatedAt = value["updatedAt"] as? Double ?? 0
     }
@@ -29,7 +29,7 @@ struct Message: Identifiable, Equatable {
         text = value["text"] as? String ?? ""
         attachments = (value["attachments"] as? [[String: Any]] ?? []).map(MessageAttachment.init)
         reasoning = value["reasoning"] as? String ?? ""
-        title = value["title"] as? String ?? "ツール"
+        title = value["title"] as? String ?? L10n.string("ツール")
         result = value["result"] as? String ?? ""
         seq = value["seq"] as? Int
         streaming = value["streaming"] as? Bool ?? false
@@ -60,7 +60,7 @@ struct Approval: Identifiable {
         id = value["eventId"] as? String ?? ""
         event = value["event"] as? String ?? ""
         let request = value["request"] as? [String: Any] ?? [:]
-        title = request["toolName"] as? String ?? "確認があります"
+        title = request["toolName"] as? String ?? L10n.string("確認があります")
         reason = request["reason"] as? String ?? ""
         questions = (request["questions"] as? [[String: Any]] ?? []).map(QuestionItem.init)
     }
@@ -78,7 +78,7 @@ struct ChatSnapshot {
     init(_ value: [String: Any]) {
         raw = value
         id = value["id"] as? String ?? ""
-        title = value["title"] as? String ?? "新しいチャット"
+        title = value["title"] as? String ?? L10n.string("新しいチャット")
         messages = (value["messages"] as? [[String: Any]] ?? []).map(Message.init)
         approvals = (value["approvals"] as? [[String: Any]] ?? []).map(Approval.init)
         running = value["running"] as? Bool ?? false
@@ -147,6 +147,6 @@ struct SettingsNamespace: Identifiable {
         secretPaths = (json["secrets"] as? [[String: Any]] ?? []).compactMap { $0["path"] as? [String] }
     }
     var displayName: String {
-        ["agent-default-model": "既定のモデル", "subagent-model-selection": "サブエージェントのモデル", "llm-deepseek": "DeepSeek", "llm-pi-ai": "モデル接続・プロバイダ", "agent-loop": "回答・実行ループ", "agent-presets": "基本指示・プリセット", "permission": "権限と承認", "shell": "コマンド実行", "web-search-deepseek": "Web検索", "locale": "言語"][name] ?? name
+        ["agent-default-model": "既定のモデル", "subagent-model-selection": "サブエージェントのモデル", "llm-deepseek": "DeepSeek", "llm-pi-ai": "モデル接続・プロバイダ", "agent-loop": "回答・実行ループ", "agent-presets": "基本指示・プリセット", "permission": "権限と承認", "shell": "コマンド実行", "web-search-deepseek": "Web検索", "locale": "言語"][name].map(L10n.string) ?? name
     }
 }

@@ -38,7 +38,7 @@ import UserNotifications
     var apnsConfigured: Bool { (status["apns"] as? [String: Any])?["configured"] as? Bool ?? false }
     var notificationsEnabled: Bool { status["notificationsEnabled"] as? Bool ?? false }
     var notificationDeviceRegistered: Bool { status["deviceRegistered"] as? Bool ?? false }
-    var modelName: String { models.first(where: { $0.id == selectedModel })?.name ?? "モデルを選択" }
+    var modelName: String { models.first(where: { $0.id == selectedModel })?.name ?? L10n.string("モデルを選択") }
 
     init() {
         #if DEBUG
@@ -74,9 +74,9 @@ import UserNotifications
         await perform {
             let candidate = API(url: try API.validate(url))
             let health = try await candidate.request("health")
-            guard health["service"] as? String == "harness-pocket", health["protocolVersion"] as? Int == 1 else { throw PocketError.message("Harness Pocket用の接続先ではありません") }
+            guard health["service"] as? String == "harness-pocket", health["protocolVersion"] as? Int == 1 else { throw PocketError.message(L10n.string("Harness Pocket用の接続先ではありません")) }
             let response = try await candidate.request("v1/pair", method: "POST", body: ["code": code, "name": UIDevice.current.name])
-            guard let token = response["token"] as? String, let id = response["deviceId"] as? String else { throw PocketError.message("端末登録に失敗しました") }
+            guard let token = response["token"] as? String, let id = response["deviceId"] as? String else { throw PocketError.message(L10n.string("端末登録に失敗しました")) }
             try Keychain.set("deviceToken", token)
             candidate.token = token; self.api = candidate; self.serverURL = candidate.baseURL.absoluteString; self.deviceID = id; self.paired = true
             self.startConnection()
@@ -97,13 +97,17 @@ import UserNotifications
                         guard let json = try JSONSerialization.jsonObject(with: data) as? [String: Any] else { continue }
                         let type = json["type"] as? String
                         if type == "ready" || type == "status" {
+                            let wasConnected = self.connected
                             self.status = json["status"] as? [String: Any] ?? [:]
                             if type == "ready" { self.streamSnapshot = nil; self.focusConversation() }
                             self.connected = self.status["connected"] as? Bool ?? false
                             if self.connected {
-                                retry = 1; try await self.refresh()
-                                await self.registerIfAllowed()
-                                if let pending = UserDefaults.standard.string(forKey: "pendingNotificationSession") { await self.open(pending); UserDefaults.standard.removeObject(forKey: "pendingNotificationSession") }
+                                retry = 1
+                                if type == "ready" || !wasConnected {
+                                    await self.perform { try await self.refresh() }
+                                    await self.registerIfAllowed()
+                                    if let pending = UserDefaults.standard.string(forKey: "pendingNotificationSession") { await self.open(pending); UserDefaults.standard.removeObject(forKey: "pendingNotificationSession") }
+                                }
                             }
                         } else if let snap = json["snapshot"] as? [String: Any] {
                             if snap["id"] as? String == self.currentID { self.streamSnapshot = snap; self.apply(ChatSnapshot(snap)) }
@@ -112,8 +116,8 @@ import UserNotifications
                             self.applyStreamDelta(json)
                         } else if type == "sessionSummary" {
                             self.updateSummary(id: json["sessionId"] as? String, title: json["title"] as? String, running: json["running"] as? Bool)
-                        } else if type == "workspaces" { try await self.refreshWorkspaces(); try await self.refreshList() }
-                        else if type == "sessions" { try await self.refreshList() }
+                        } else if type == "workspaces" { await self.perform { try await self.refreshWorkspaces(); try await self.refreshList() } }
+                        else if type == "sessions" { await self.perform { try await self.refreshList() } }
                     }
                 } catch { if self.socket === ws { self.connected = false } }
                 ws.cancel(with: .goingAway, reason: nil)
@@ -184,14 +188,14 @@ import UserNotifications
         workspaces = (work["items"] as? [[String: Any]] ?? []).map(Workspace.init)
     }
     func directories(_ path: String?) async throws -> DirectoryListing {
-        guard let api else { throw PocketError.message("DGXへ接続してください") }
+        guard let api else { throw PocketError.message(L10n.string("DGXへ接続してください")) }
         let query = path.map { [URLQueryItem(name: "path", value: $0)] } ?? []
         return DirectoryListing(try await api.request("v1/directories", query: query))
     }
     func selectDirectory(_ path: String) async throws {
-        guard let api else { throw PocketError.message("DGXへ接続してください") }
+        guard let api else { throw PocketError.message(L10n.string("DGXへ接続してください")) }
         let response = try await api.request("v1/workspaces", method: "POST", body: ["path": path])
-        guard let row = response["workspace"] as? [String: Any], let id = row["workspaceId"] as? String else { throw PocketError.message("作業場所を登録できませんでした") }
+        guard let row = response["workspace"] as? [String: Any], let id = row["workspaceId"] as? String else { throw PocketError.message(L10n.string("作業場所を登録できませんでした")) }
         let workspace = Workspace(row)
         workspaces.removeAll { $0.id == id }; workspaces.append(workspace)
         workspaceID = id
@@ -239,7 +243,7 @@ import UserNotifications
             } catch let PocketError.attachmentRejected(message) {
                 self.pendingText = nil; self.pendingRequestID = nil; self.pendingAttachments = []; self.persistPending()
                 self.draft = text; self.attachments = sendingAttachments
-                throw PocketError.message(message + "\n下書きに戻しました。モデルや添付を変更して送信できます。")
+                throw PocketError.message(message + L10n.string("\n下書きに戻しました。モデルや添付を変更して送信できます。"))
             }
             try await self.refreshList()
         }
@@ -285,7 +289,7 @@ import UserNotifications
         await perform {
             if enabled {
                 let granted = try await UNUserNotificationCenter.current().requestAuthorization(options: [.alert, .sound, .badge])
-                guard granted else { throw PocketError.message("iPhoneの「設定 → 通知 → Harness Pocket」で通知を許可してください") }
+                guard granted else { throw PocketError.message(L10n.string("iPhoneの「設定 → 通知 → Harness Pocket」で通知を許可してください")) }
                 UIApplication.shared.registerForRemoteNotifications()
             }
             if let api = self.api { self.status = try await api.request("v1/push/preferences", method: "POST", body: ["enabled": enabled]) }
@@ -301,7 +305,7 @@ import UserNotifications
             guard let api = self.api else { return }
             let environment = Bundle.main.object(forInfoDictionaryKey: "APNSEnvironment") as? String ?? "production"
             self.status = try await api.request("v1/push/register", method: "POST", body: ["token": token, "environment": environment])
-            self.pushMessage = "このiPhoneを登録しました"
+            self.pushMessage = L10n.string("このiPhoneを登録しました")
         }
     }
     func disconnect() async {
@@ -313,9 +317,9 @@ import UserNotifications
     private func saveAttachments(_ items: [DraftAttachment], key: String) { UserDefaults.standard.set(try? JSONEncoder().encode(items), forKey: key) }
     private func readAttachments(key: String) -> [DraftAttachment] { guard let data = UserDefaults.standard.data(forKey: key) else { return [] }; return (try? JSONDecoder().decode([DraftAttachment].self, from: data)) ?? [] }
     func addAttachment(data: Data, name: String, image: Bool) throws {
-        guard attachments.count < 5 else { throw PocketError.message("添付は5個までです") }
+        guard attachments.count < 5 else { throw PocketError.message(L10n.string("添付は5個までです")) }
         let item = try DraftAttachment.make(data: data, name: name, image: image)
-        guard attachments.reduce(0, { $0 + $1.size }) + item.size <= 20 * 1024 * 1024 else { try? FileManager.default.removeItem(at: item.url); throw PocketError.message("添付は合計20MBまでです") }
+        guard attachments.reduce(0, { $0 + $1.size }) + item.size <= 20 * 1024 * 1024 else { try? FileManager.default.removeItem(at: item.url); throw PocketError.message(L10n.string("添付は合計20MBまでです")) }
         attachments.append(item)
     }
     func removeAttachment(_ item: DraftAttachment) { attachments.removeAll { $0.id == item.id }; try? FileManager.default.removeItem(at: item.url) }
@@ -341,7 +345,8 @@ import UserNotifications
     private func loadDemo() {
         demo = true; paired = true; connected = true
         models = [ModelOption(provider: "qwen-local", model: "qwen3.8-flash-next", name: "Qwen 3.8 Flash", efforts: [])]; selectedModel = models[0].id
-        currentID = "demo"; conversations = [Conversation(["id": "demo", "title": "いつものAIを、ポケットに。", "updatedAt": Date().timeIntervalSince1970 * 1000])]
-        chat = ChatSnapshot(["id": "demo", "title": "いつものAIを、ポケットに。", "messages": [["id": "1", "role": "user", "text": "外出中もDGXのAIと話せる？"], ["id": "2", "role": "assistant", "text": "はい。自宅のDGX Sparkにつないで、ここから会話を続けられます。\n\n**画面を閉じても大丈夫。**\n回答が完了すると、iPhoneに通知が届きます。\n\nモデルの切り替えや基本設定も、右上の設定から操作できます。"]]])
+        let title = L10n.string("いつものAIを、ポケットに。")
+        currentID = "demo"; conversations = [Conversation(["id": "demo", "title": title, "updatedAt": Date().timeIntervalSince1970 * 1000])]
+        chat = ChatSnapshot(["id": "demo", "title": title, "messages": [["id": "1", "role": "user", "text": L10n.string("外出中もDGXのAIと話せる？")], ["id": "2", "role": "assistant", "text": L10n.string("はい。自宅のDGX Sparkにつないで、ここから会話を続けられます。\n\n**画面を閉じても大丈夫。**\n回答が完了すると、iPhoneに通知が届きます。\n\nモデルの切り替えや基本設定も、右上の設定から操作できます。")]]])
     }
 }

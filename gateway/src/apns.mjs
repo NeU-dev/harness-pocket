@@ -65,7 +65,8 @@ export class APNs {
   }
 }
 export function notificationPayload(item, test = false) {
-  return { aps: { alert: { title: 'Harness Pocket', body: test ? '通知の接続テストが完了しました。' : item.kind === 'question' ? 'あなたへの質問があります。タップして回答してください。' : item.kind === 'approval' ? '操作の許可を待っています。タップして許可・拒否を選んでください。' : '回答が完了しました。タップして続きを確認できます。' }, sound: 'default', 'thread-id': item.sessionId || 'test' }, sessionId: item.sessionId, eventId: item.id, kind: item.kind || 'completed' };
+  const localizationKey = test ? 'POCKET_NOTIFICATION_TEST' : item.kind === 'question' ? 'POCKET_NOTIFICATION_QUESTION' : item.kind === 'approval' ? 'POCKET_NOTIFICATION_APPROVAL' : 'POCKET_NOTIFICATION_COMPLETE';
+  return { aps: { alert: { title: 'Harness Pocket', 'loc-key': localizationKey }, sound: 'default', 'thread-id': item.sessionId || 'test' }, sessionId: item.sessionId, eventId: item.id, kind: item.kind || 'completed' };
 }
 export class NotificationWorker {
   constructor(store, sender) { this.store = store; this.sender = sender; this.running = false; }
